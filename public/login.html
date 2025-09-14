@@ -31,7 +31,7 @@
     const res = await fetch("https://bookwise-1-8sk2.onrender.com/api/login", {
      method: "POST",
      headers: { "Content-Type": "application/json" },
-     body: JSON.stringify({ username: email, password }),
+     body: JSON.stringify({email, password }),
     });
 
 
