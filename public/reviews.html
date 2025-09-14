@@ -34,81 +34,46 @@
 <div id="toast"></div>
 
 <script>
-  const token=localStorage.getItem("token");
-  const user=JSON.parse(localStorage.getItem("user")||"null");
-  const loginLink=document.getElementById("loginLink");
-  const logoutLink=document.getElementById("logoutLink");
-  if(user){loginLink.style.display='none';logoutLink.style.display='inline';}
-  logoutLink.addEventListener("click",e=>{e.preventDefault();localStorage.clear();location='/login.html';});
-
-  let all=[];
-  async function load() {
-    const res=await fetch('/reviews');
-    all=await res.json();
-    render();
-  }
-
-  function render() {
-    const q=document.getElementById("search").value.toLowerCase();
-    const rf=document.getElementById("ratingFilter").value;
-    let arr=all.filter(r=>!q||r.title.toLowerCase().includes(q)||r.author.toLowerCase().includes(q));
-    if(rf==="5") arr=arr.filter(r=>r.rating==5);
-    if(rf==="4") arr=arr.filter(r=>r.rating>=4);
-    if(rf==="3") arr=arr.filter(r=>r.rating>=3);
-
-    // Group by book title
-    const grouped = {};
-    arr.forEach(r=>{
-      if(!grouped[r.title]) grouped[r.title]=[];
-      grouped[r.title].push(r);
-    });
-
-    const list=document.getElementById("list"); list.innerHTML="";
-    Object.keys(grouped).forEach(title=>{
-      const reviews=grouped[title];
-      const avg=(reviews.reduce((a,b)=>a+(b.rating||0),0)/reviews.length).toFixed(1);
-      const container=document.createElement("div");
-      container.className="card";
-      container.innerHTML=`<h3>${escapeHtml(title)} - ⭐ ${avg} (${reviews.length} reviews)</h3>`;
-
-      const btn=document.createElement("button");
-      btn.textContent="View All Reviews";
-      btn.onclick=()=>{
-        details.style.display=details.style.display==="none"?"block":"none";
-        btn.textContent=details.style.display==="none"?"View All Reviews":"Hide Reviews";
-      };
-      container.appendChild(btn);
-
-      const details=document.createElement("div");
-      details.style.display="none";
-      reviews.forEach(r=>{
-        const d=document.createElement("div");
-        d.className="card";
-        d.style.background="#f9f9f9";
-        d.innerHTML=`<p><b>${escapeHtml(r.author)}</b> (${r.rating}★)</p>
-                     <p>${escapeHtml(r.review)}</p>`;
-        if(user&&user.role==="admin"){
-          const b=document.createElement("button");
-          b.textContent="Delete"; b.style.background="#ef4444";
-          b.onclick=async()=>{
-            if(!confirm("Delete review?")) return;
-            const res=await fetch("/reviews/"+r._id,{method:"DELETE",headers:{Authorization:"Bearer "+token}});
-            if(res.ok){showToast("Review deleted");load();}
-          };
-          d.appendChild(b);
-        }
-        details.appendChild(d);
+  function loadReviews() {
+    fetch("https://bookwise-1-8sk2.onrender.com/reviews")
+      .then(response => response.json())
+      .then(data => {
+        const reviewsContainer = document.getElementById("reviews");
+        reviewsContainer.innerHTML = "";
+        data.forEach(review => {
+          const div = document.createElement("div");
+          div.innerHTML = `
+            <p><strong>${review.book}</strong>: ${review.review}</p>
+            <button onclick="deleteReview('${review._id}')">Delete</button>
+          `;
+          reviewsContainer.appendChild(div);
+        });
+      })
+      .catch(error => {
+        console.error("Error:", error);
       });
-      container.appendChild(details);
-      list.appendChild(container);
-    });
   }
 
-  function escapeHtml(s){return String(s||"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));}
-  function showToast(m){const t=document.getElementById("toast");t.textContent=m;t.className="show";setTimeout(()=>t.className="",2500);}
-  document.getElementById("search").addEventListener("input",render);
-  document.getElementById("ratingFilter").addEventListener("change",render);
-  load();
+  function deleteReview(id) {
+    fetch(`https://bookwise-1-8sk2.onrender.com/deleteReview?id=${id}`, {
+      method: "DELETE"
+    })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          alert("Review deleted!");
+          loadReviews();
+        } else {
+          alert("Failed to delete review.");
+        }
+      })
+      .catch(error => {
+        console.error("Error:", error);
+      });
+  }
+
+  window.onload = loadReviews;
 </script>
+
 </body>
 </html>
