@@ -18,19 +18,20 @@ mongoose
 
 //admindefault
 async function createDefaultAdmin() {
-  const existingAdmin = await User.findOne({ email: "admin@pccoer.in" });
-  if (!existingAdmin) {
-    const admin = new User({
-      username: "Admin",
-      email: "admin@pccoer.in",
+  const adminEmail = "admin@pccoer.in";
+  const existing = await User.findOne({ username: adminEmail });
+  if (!existing) {
+    const adminUser = new User({
+      username: adminEmail,
       password: "admin123",
       role: "admin"
     });
-    await admin.save();
+    await adminUser.save();
     console.log("✅ Default admin created: admin@pccoer.in / admin123");
+  } else {
+    console.log("ℹ️ Admin already exists");
   }
 }
-
 createDefaultAdmin();
 
 
