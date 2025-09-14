@@ -16,6 +16,24 @@ mongoose
   .then(() => console.log("MongoDB connected"))
   .catch((err) => console.error("MongoDB connection error:", err));
 
+//admindefault
+async function createDefaultAdmin() {
+  const existingAdmin = await User.findOne({ email: "admin@pccoer.in" });
+  if (!existingAdmin) {
+    const admin = new User({
+      username: "Admin",
+      email: "admin@pccoer.in",
+      password: "admin123",
+      role: "admin"
+    });
+    await admin.save();
+    console.log("✅ Default admin created: admin@pccoer.in / admin123");
+  }
+}
+
+createDefaultAdmin();
+
+
 // User schema
 const userSchema = new mongoose.Schema({
   username: String,
