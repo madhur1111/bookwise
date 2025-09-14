@@ -42,11 +42,12 @@
     const review = document.getElementById("review").value;
     const rating = document.getElementById("rating").value;
 
-    fetch("https://bookwise-1-8sk2.onrender.com/api/addReview", { 
+    fetch("https://bookwise-1-8sk2.onrender.com/api/addReview", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ book: `${title} by ${author}`, review, rating })
-    })
+     headers: { "Content-Type": "application/json" },
+     body: JSON.stringify({ book, review })
+ });
+
       .then(response => response.json())
       .then(data => {
         if (data.success) {
