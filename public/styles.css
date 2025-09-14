@@ -493,4 +493,105 @@ input:focus, select:focus, textarea:focus {
   color: #666;
   margin: 0;
 }
+/* --- Team Section Animation --- */
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.team-card {
+  background: white;
+  padding: 20px;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  text-align: center;
+  width: 180px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  opacity: 0; /* Start invisible */
+  animation: slideInUp 0.8s forwards;
+}
+
+.team-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+.team-card:nth-child(1) { animation-delay: 0.2s; }
+.team-card:nth-child(2) { animation-delay: 0.4s; }
+.team-card:nth-child(3) { animation-delay: 0.6s; }
+.team-card:nth-child(4) { animation-delay: 0.8s; }
+
+.team-card img {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  margin-bottom: 10px;
+  border: 3px solid #4f46e5;
+  object-fit: cover;
+}
+
+.team-card h3 {
+  font-size: 18px;
+  margin: 8px 0 4px;
+}
+
+.team-card p {
+  font-size: 14px;
+  color: #666;
+  margin: 0;
+}
+/* --- Recent Reviews Slider Animation --- */
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+#recent {
+  display: flex;
+  overflow-x: auto;
+  gap: 16px;
+  padding: 10px 0;
+  scroll-behavior: smooth;
+}
+
+#recent::-webkit-scrollbar {
+  display: none; /* hide scrollbar for cleaner look */
+}
+
+#recent div {
+  flex: 0 0 auto;
+  min-width: 250px;
+  background: white;
+  padding: 16px;
+  border-radius: 16px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  opacity: 0; /* hidden before animation */
+  animation: slideInRight 0.8s forwards;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+#recent div:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+/* staggered animation so reviews flow in */
+#recent div:nth-child(1) { animation-delay: 0.2s; }
+#recent div:nth-child(2) { animation-delay: 0.4s; }
+#recent div:nth-child(3) { animation-delay: 0.6s; }
+#recent div:nth-child(4) { animation-delay: 0.8s; }
+#recent div:nth-child(5) { animation-delay: 1s; }
+/* you can extend this pattern up to 15 reviews */
 
