@@ -4,6 +4,114 @@
   <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Reviews • Bookwise</title>
   <link rel="stylesheet" href="/styles.css">
+  <style>
+    /* Floating card style for book review blocks */
+    .review-card {
+      background: #fff;
+      border-radius: 15px;
+      padding: 20px;
+      margin: 20px 0;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .review-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 25px rgba(0,0,0,0.12);
+    }
+
+    /* Individual reviews */
+    .single-review-card {
+      background: #f9fafc;
+      border-radius: 12px;
+      padding: 15px;
+      margin-top: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+      transition: transform 0.2s;
+      position: relative; /* needed for menu */
+    }
+    .single-review-card:hover {
+      transform: scale(1.02);
+    }
+
+    /* Reviewer header with avatar */
+    .review-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #6a11cb, #2575fc);
+      color: white;
+      font-weight: bold;
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 10px;
+    }
+    .review-user {
+      font-weight: bold;
+      color: #333;
+      margin: 0;
+    }
+    .review-rating {
+      font-size: 14px;
+      color: #ff9800;
+      margin: 0;
+    }
+    .review-text {
+      font-style: italic;
+      color: #444;
+      margin: 8px 0 0 0;
+    }
+
+    /* 🔥 Three-dot menu */
+    .menu-dots {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      cursor: pointer;
+      font-size: 18px;
+      user-select: none;
+    }
+    .menu-content {
+      position: absolute;
+      top: 28px;
+      right: 8px;
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      overflow: hidden;
+      transform: translateY(-10px);
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.25s ease; /* smooth dropdown */
+      z-index: 10;
+    }
+    .menu-content button {
+      background: none;
+      border: none;
+      padding: 10px 14px;
+      width: 100%;
+      text-align: left;
+      font-size: 14px;
+      cursor: pointer;
+      color: #ff4d4d;
+    }
+    .menu-content button:hover {
+      background: #ffe5e5;
+    }
+    /* When menu is active */
+    .menu-dots.active + .menu-content {
+      transform: translateY(0);
+      opacity: 1;
+      pointer-events: auto;
+    }
+  </style>
 </head>
 <body>
 <header>
@@ -111,10 +219,20 @@
 
       visibleReviews.forEach(r => {
         html += `
-          <div class="single-review">
-            <p><strong>${r.username || "Anonymous"}</strong>: ${r.review}</p>
-            ${r.rating ? `<p>⭐ ${r.rating}/5</p>` : ""}
-            ${currentUser.role === "admin" ? `<button onclick="deleteReview('${r._id}')">Delete</button>` : ""}
+          <div class="single-review-card">
+            <div class="review-header">
+              <div class="avatar">${(r.username || "A").charAt(0).toUpperCase()}</div>
+              <div>
+                <p class="review-user">${r.username || "Anonymous"}</p>
+                <p class="review-rating">⭐ ${r.rating || "N/A"}/5</p>
+              </div>
+            </div>
+            <p class="review-text">"${r.review || "No review text"}"</p>
+            ${currentUser.role === "admin" ? `
+              <div class="menu-dots" onclick="toggleMenu(this)">⋮</div>
+              <div class="menu-content">
+                <button onclick="deleteReview('${r._id}')">Delete</button>
+              </div>` : ""}
           </div>
         `;
       });
@@ -129,6 +247,24 @@
       reviewsContainer.appendChild(div);
     });
   }
+
+  function toggleMenu(el) {
+    // close other menus
+    document.querySelectorAll(".menu-dots").forEach(dot => {
+      if (dot !== el) dot.classList.remove("active");
+    });
+    el.classList.toggle("active");
+  }
+
+  // 🔥 close menu if clicked outside
+  document.addEventListener("click", function(e) {
+    if (!e.target.classList.contains("menu-dots") &&
+        !e.target.closest(".menu-content")) {
+      document.querySelectorAll(".menu-dots").forEach(dot => {
+        dot.classList.remove("active");
+      });
+    }
+  });
 
   function toggleBook(bookName) {
     expandedBooks[bookName] = !expandedBooks[bookName];
