@@ -22,27 +22,32 @@
 </main>
 
 <script>
-  document.getElementById("loginForm").addEventListener("submit", async (e) => {
-    e.preventDefault();
-    const email = document.getElementById("email").value.trim().toLowerCase();
-    const password = document.getElementById("password").value;
-    const msg = document.getElementById("msg");
-    try {
+ document.getElementById("loginForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const email = document.getElementById("email").value.trim().toLowerCase();
+  const password = document.getElementById("password").value;
+  const msg = document.getElementById("msg");
+
+  try {
     const res = await fetch("https://bookwise-1-8sk2.onrender.com/api/login", {
-     method: "POST",
-     headers: { "Content-Type": "application/json" },
-     body: JSON.stringify({email, password }),
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
     });
 
+    const data = await res.json();
 
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Login failed");
-      localStorage.setItem("user", JSON.stringify(data.user));
-      location = "/index.html";
-    } catch (err) {
-      msg.style.color = "crimson"; msg.textContent = err.message;
-    }
-  });
+    if (!res.ok) throw new Error(data.error || "Login failed"); // ✅ now works
+
+    localStorage.setItem("token", data.token);
+    localStorage.setItem("user", JSON.stringify(data.user));
+    location = "/index.html";
+  } catch (err) {
+    msg.style.color = "crimson";
+    msg.textContent = err.message;
+  }
+});
+
 </script>
 </body>
 </html>
