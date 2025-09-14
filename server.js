@@ -49,10 +49,13 @@ createDefaultAdmin();
 // Review schema
 const reviewSchema = new mongoose.Schema({
   book: String,
+  author: String,
   review: String,
-  rating: { type: Number, min: 1, max: 5, required: true }  // ✅ added
+  rating: Number,
+  username: String   // ✅ who gave the review
 });
 const Review = mongoose.model("Review", reviewSchema);
+
 
 // Register route
 app.post("/api/register", async (req, res) => {
@@ -110,22 +113,27 @@ app.post("/api/login", async (req, res) => {
 
 
 // Add review route
+// Add review route
 app.post("/api/addReview", async (req, res) => {
   try {
-    const { book, review, rating } = req.body;  // ✅ added rating
-    if (!book || !review || !rating) {
-      return res.json({ success: false, message: "All fields are required" });
-    }
+    const { book, author, review, rating, username } = req.body;
 
-    const newReview = new Review({ book, review, rating }); // ✅ save rating
+    const newReview = new Review({
+      book,
+      author,
+      review,
+      rating,
+      username
+    });
+
     await newReview.save();
-
     res.json({ success: true, message: "Review added successfully" });
   } catch (err) {
     console.error(err);
     res.json({ success: false, message: "Error adding review" });
   }
 });
+
 
 // Get reviews
 app.get("/api/reviews", async (req, res) => {
