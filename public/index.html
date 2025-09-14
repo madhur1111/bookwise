@@ -65,7 +65,32 @@
       });
   }
 
-  window.onload = loadReviews;
+  // ✅ Check login status
+  function checkLogin() {
+    const user = JSON.parse(localStorage.getItem("user"));
+    const loginLink = document.getElementById("loginLink");
+    const logoutLink = document.getElementById("logoutLink");
+
+    if (user) {
+      loginLink.style.display = "none";
+      logoutLink.style.display = "inline";
+    } else {
+      loginLink.style.display = "inline";
+      logoutLink.style.display = "none";
+    }
+
+    // ✅ Logout button clears storage
+    logoutLink.addEventListener("click", () => {
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+      location.reload(); // refresh to update navbar
+    });
+  }
+
+  window.onload = () => {
+    loadReviews();
+    checkLogin();
+  };
 </script>
 
 </body>
