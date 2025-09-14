@@ -34,24 +34,54 @@
 <div id="toast"></div>
 
 <script>
+  let allReviews = []; // store all reviews
+
   function loadReviews() {
     fetch("https://bookwise-1-8sk2.onrender.com/api/reviews")
       .then(response => response.json())
       .then(data => {
-        const reviewsContainer = document.getElementById("reviews");
-        reviewsContainer.innerHTML = "";
-        data.forEach(review => {
-          const div = document.createElement("div");
-          div.innerHTML = `
-            <p><strong>${review.book}</strong>: ${review.review}</p>
-            <button onclick="deleteReview('${review._id}')">Delete</button>
-          `;
-          reviewsContainer.appendChild(div);
-        });
+        allReviews = data; // keep all reviews in memory
+        renderReviews();
       })
       .catch(error => {
         console.error("Error:", error);
       });
+  }
+
+  function renderReviews() {
+    const reviewsContainer = document.getElementById("list");
+    const searchValue = document.getElementById("search").value.toLowerCase();
+    const ratingFilter = document.getElementById("ratingFilter").value;
+
+    reviewsContainer.innerHTML = "";
+
+    let filtered = allReviews.filter(r => {
+      let matchSearch = r.book.toLowerCase().includes(searchValue) || (r.review && r.review.toLowerCase().includes(searchValue));
+      let matchRating = true;
+
+      if (ratingFilter) {
+        const rating = parseInt(r.rating || 0); // assume rating field exists, else default 0
+        matchRating = rating >= parseInt(ratingFilter);
+      }
+
+      return matchSearch && matchRating;
+    });
+
+    if (filtered.length === 0) {
+      reviewsContainer.innerHTML = "<p>No reviews found.</p>";
+      return;
+    }
+
+    filtered.forEach(review => {
+      const div = document.createElement("div");
+      div.classList.add("review-card");
+      div.innerHTML = `
+        <p><strong>${review.book}</strong>: ${review.review}</p>
+        ${review.rating ? `<p>⭐ ${review.rating}/5</p>` : ""}
+        <button onclick="deleteReview('${review._id}')">Delete</button>
+      `;
+      reviewsContainer.appendChild(div);
+    });
   }
 
   function deleteReview(id) {
@@ -71,6 +101,10 @@
         console.error("Error:", error);
       });
   }
+
+  // hook up filters
+  document.getElementById("search").addEventListener("input", renderReviews);
+  document.getElementById("ratingFilter").addEventListener("change", renderReviews);
 
   window.onload = loadReviews;
 </script>
