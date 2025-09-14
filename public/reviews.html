@@ -20,6 +20,7 @@
 <main class="container">
   <div class="card">
     <h2>Community Reviews</h2>
+    <div id="averageRating" style="margin-bottom:10px; font-weight:bold;"></div>
     <input id="search" placeholder="Search by title or author..." style="margin-top:10px">
     <select id="ratingFilter">
       <option value="">All Ratings</option>
@@ -29,23 +30,37 @@
     </select>
   </div>
   <div id="list"></div>
+  <button id="toggleButton" style="display:none; margin-top:10px;">See All Reviews</button>
 </main>
 
 <div id="toast"></div>
 
 <script>
-  let allReviews = []; // store all reviews
+  let allReviews = []; 
+  let showAll = false; // control toggle
 
   function loadReviews() {
     fetch("https://bookwise-1-8sk2.onrender.com/api/reviews")
       .then(response => response.json())
       .then(data => {
-        allReviews = data; // keep all reviews in memory
+        allReviews = data;
+        renderAverage();
         renderReviews();
       })
       .catch(error => {
         console.error("Error:", error);
       });
+  }
+
+  function renderAverage() {
+    if (allReviews.length === 0) {
+      document.getElementById("averageRating").innerText = "No reviews yet.";
+      return;
+    }
+
+    const sum = allReviews.reduce((acc, r) => acc + (parseInt(r.rating) || 0), 0);
+    const avg = (sum / allReviews.length).toFixed(1);
+    document.getElementById("averageRating").innerText = `⭐ ${avg}/5 from ${allReviews.length} reviews`;
   }
 
   function renderReviews() {
@@ -60,7 +75,7 @@
       let matchRating = true;
 
       if (ratingFilter) {
-        const rating = parseInt(r.rating || 0); // assume rating field exists, else default 0
+        const rating = parseInt(r.rating || 0);
         matchRating = rating >= parseInt(ratingFilter);
       }
 
@@ -69,19 +84,33 @@
 
     if (filtered.length === 0) {
       reviewsContainer.innerHTML = "<p>No reviews found.</p>";
+      document.getElementById("toggleButton").style.display = "none";
       return;
     }
 
-    filtered.forEach(review => {
+    // Show first 3 by default, or all if toggled
+    const visibleReviews = showAll ? filtered : filtered.slice(0, 3);
+
+    visibleReviews.forEach(review => {
       const div = document.createElement("div");
       div.classList.add("review-card");
       div.innerHTML = `
-        <p><strong>${review.book}</strong>: ${review.review}</p>
+        <p><strong>${review.book}</strong> ${review.author ? `by ${review.author}` : ""}</p>
+        <p>${review.review}</p>
         ${review.rating ? `<p>⭐ ${review.rating}/5</p>` : ""}
         <button onclick="deleteReview('${review._id}')">Delete</button>
       `;
       reviewsContainer.appendChild(div);
     });
+
+    // Toggle button visible only if more than 3
+    const toggleButton = document.getElementById("toggleButton");
+    if (filtered.length > 3) {
+      toggleButton.style.display = "block";
+      toggleButton.innerText = showAll ? "Show Less" : "See All Reviews";
+    } else {
+      toggleButton.style.display = "none";
+    }
   }
 
   function deleteReview(id) {
@@ -102,9 +131,15 @@
       });
   }
 
-  // hook up filters
+  // filters
   document.getElementById("search").addEventListener("input", renderReviews);
   document.getElementById("ratingFilter").addEventListener("change", renderReviews);
+
+  // toggle reviews
+  document.getElementById("toggleButton").addEventListener("click", () => {
+    showAll = !showAll;
+    renderReviews();
+  });
 
   window.onload = loadReviews;
 </script>
