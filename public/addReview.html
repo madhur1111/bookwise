@@ -12,7 +12,6 @@
   <nav>
     <a href="/index.html">Home</a>
     <a href="/reviews.html">Reviews</a>
-    <a href="/addReview.html">Add Review</a>
     <a href="/borrow.html">Borrow Records</a>
     <a href="/login.html" id="loginLink">Login</a>
     <a href="#" id="logoutLink" style="display:none">Logout</a>
@@ -20,69 +19,49 @@
 </header>
 
 <main class="container">
-  <div class="form-card">
+  <div class="card">
+    <h2>Submit Your Review</h2>
     <form id="reviewForm">
-      <label>Book Name</label>
-      <input id="book" type="text" required>
-      <label>Your Review</label>
-      <textarea id="review" required></textarea>
-      <button type="submit">Submit</button>
-      <p id="msg" class="small muted"></p>
+      <input type="text" id="title" placeholder="Book Title" required>
+      <input type="text" id="author" placeholder="Author" required>
+      <textarea id="review" placeholder="Write your review..." required></textarea>
+      <input type="number" id="rating" min="1" max="5" placeholder="Rating (1–5)" required>
+      <button class="btn" type="submit">Submit Review</button>
     </form>
   </div>
 </main>
 
+<div id="toast"></div>
+
 <script>
-  // ✅ Navbar login/logout
-  function checkLogin() {
-    const user = JSON.parse(localStorage.getItem("user"));
-    const loginLink = document.getElementById("loginLink");
-    const logoutLink = document.getElementById("logoutLink");
+  document.getElementById("reviewForm").addEventListener("submit", function (event) {
+    event.preventDefault();
 
-    if (user) {
-      loginLink.style.display = "none";
-      logoutLink.style.display = "inline";
-    } else {
-      loginLink.style.display = "inline";
-      logoutLink.style.display = "none";
-    }
+    const title = document.getElementById("title").value;
+    const author = document.getElementById("author").value;
+    const review = document.getElementById("review").value;
+    const rating = document.getElementById("rating").value;
 
-    logoutLink.addEventListener("click", () => {
-      localStorage.removeItem("token");
-      localStorage.removeItem("user");
-      location.href = "/login.html";
-    });
-  }
+    fetch("https://bookwise-1-8sk2.onrender.com/api/addReview", {
+      method: "POST",
+     headers: { "Content-Type": "application/json" },
+     body: JSON.stringify({ book, review })
+ });
 
-  checkLogin();
-
-  // ✅ Handle review form
-  document.getElementById("reviewForm").addEventListener("submit", async (e) => {
-    e.preventDefault();
-    const book = document.getElementById("book").value.trim();
-    const review = document.getElementById("review").value.trim();
-    const msg = document.getElementById("msg");
-
-    try {
-      const res = await fetch("https://bookwise-1-8sk2.onrender.com/api/addReview", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ book, review })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          alert("Review added!");
+          window.location.href = "reviews.html";
+        } else {
+          alert("Failed to add review: " + data.message);
+        }
+      })
+      .catch(error => {
+        console.error("Error:", error);
       });
-
-      const data = await res.json();
-      if (data.success) {
-        msg.style.color = "green";
-        msg.textContent = "Review added successfully!";
-        document.getElementById("reviewForm").reset();
-      } else {
-        throw new Error(data.message || "Failed to add review");
-      }
-    } catch (err) {
-      msg.style.color = "crimson";
-      msg.textContent = err.message;
-    }
   });
 </script>
+
 </body>
 </html>
