@@ -140,3 +140,312 @@ button.toggle-btn:hover {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
 }
+/* General layout */
+body {
+  font-family: "Segoe UI", Roboto, Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background: #f9fafb;
+  color: #1f2937;
+}
+
+/* Header */
+header {
+  background: linear-gradient(135deg, #6366f1, #3b82f6);
+  color: white;
+  padding: 1rem 2rem;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 1.8rem;
+  font-weight: bold;
+}
+
+nav {
+  margin-top: 0.5rem;
+}
+
+nav a {
+  color: white;
+  margin-right: 1rem;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+nav a:hover {
+  color: #fde68a;
+}
+
+/* Container */
+.container {
+  max-width: 900px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+/* Card styles */
+.card {
+  background: white;
+  border-radius: 16px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 25px rgba(0,0,0,0.12);
+}
+
+/* Review Cards */
+.review-card {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  padding: 1rem;
+  margin: 1rem 0;
+  transition: all 0.3s ease;
+}
+
+.review-card h3 {
+  margin-top: 0;
+  font-size: 1.3rem;
+  color: #374151;
+}
+
+.single-review {
+  background: #f9fafb;
+  padding: 0.8rem;
+  margin: 0.5rem 0;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+}
+
+/* Buttons */
+button, .btn {
+  background: linear-gradient(135deg, #3b82f6, #6366f1);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 0.6rem 1.2rem;
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition: transform 0.2s ease, box-shadow 0.3s ease;
+}
+
+button:hover, .btn:hover {
+  background: linear-gradient(135deg, #2563eb, #4f46e5);
+  box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+  transform: translateY(-2px);
+}
+
+button:active {
+  transform: translateY(0);
+}
+
+/* Delete button (danger) */
+button.delete {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+}
+
+button.delete:hover {
+  background: linear-gradient(135deg, #dc2626, #b91c1c);
+}
+
+/* Rating Stars */
+.review-card p, .single-review p {
+  margin: 0.4rem 0;
+}
+
+.review-card p strong {
+  color: #111827;
+}
+
+.review-card .stars {
+  color: #facc15; /* gold */
+  font-size: 1.1rem;
+}
+
+/* Search + Filter */
+input, select, textarea {
+  width: 100%;
+  padding: 0.7rem;
+  margin: 0.6rem 0;
+  border-radius: 10px;
+  border: 1px solid #d1d5db;
+  font-size: 0.95rem;
+}
+
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: #6366f1;
+  box-shadow: 0 0 0 2px rgba(99,102,241,0.3);
+}
+
+/* Toast Notification */
+#toast {
+  visibility: hidden;
+  min-width: 250px;
+  margin-left: -125px;
+  background-color: #111827;
+  color: #fff;
+  text-align: center;
+  border-radius: 12px;
+  padding: 14px;
+  position: fixed;
+  z-index: 1001;
+  left: 50%;
+  bottom: 30px;
+  font-size: 15px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+}
+
+#toast.show {
+  visibility: visible;
+  animation: fadein 0.5s, fadeout 0.5s 2s;
+}
+
+@keyframes fadein {
+  from { bottom: 0; opacity: 0; } 
+  to { bottom: 30px; opacity: 1; }
+}
+
+@keyframes fadeout {
+  from { bottom: 30px; opacity: 1; } 
+  to { bottom: 0; opacity: 0; }
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .card, .review-card {
+    padding: 1rem;
+  }
+  nav a {
+    display: block;
+    margin: 0.5rem 0;
+  }
+}
+/* ========== Expand/Collapse Reviews Animation ========== */
+.single-review {
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: max-height 0.4s ease, opacity 0.4s ease;
+}
+
+.single-review.show {
+  max-height: 300px; /* enough for text */
+  opacity: 1;
+  margin: 0.5rem 0;
+}
+
+/* ========== Recent Reviews Carousel (Home Page) ========== */
+.recent-reviews {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding: 1rem 0;
+}
+
+.recent-reviews::-webkit-scrollbar {
+  display: none; /* hide scrollbar */
+}
+
+.review-slide {
+  flex: 0 0 250px;
+  background: white;
+  border-radius: 14px;
+  padding: 1rem;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+  scroll-snap-align: start;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.review-slide:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 25px rgba(0,0,0,0.15);
+}
+
+.review-slide h4 {
+  margin: 0;
+  font-size: 1.1rem;
+  color: #374151;
+}
+
+.review-slide p {
+  font-size: 0.9rem;
+  color: #4b5563;
+  margin: 0.3rem 0;
+}
+
+.review-slide .stars {
+  color: #facc15;
+  margin-top: 0.3rem;
+}
+
+/* Limit to max 15 slides (hide others) */
+.recent-reviews .review-slide:nth-child(n+16) {
+  display: none;
+}
+
+/* ========== Team Section ========== */
+.team-section {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.team-card {
+  background: white;
+  border-radius: 16px;
+  padding: 1.5rem;
+  text-align: center;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.team-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 28px rgba(0,0,0,0.15);
+}
+
+.team-card img {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 1rem;
+  border: 3px solid #6366f1;
+}
+
+.team-card h4 {
+  margin: 0.3rem 0;
+  font-size: 1.1rem;
+  color: #111827;
+}
+
+.team-card p {
+  font-size: 0.9rem;
+  color: #6b7280;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .recent-reviews {
+    gap: 0.6rem;
+  }
+  .review-slide {
+    flex: 0 0 200px;
+  }
+}
+
