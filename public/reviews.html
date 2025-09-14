@@ -35,7 +35,7 @@
 
 <script>
   function loadReviews() {
-    fetch("https://bookwise-1-8sk2.onrender.com/reviews")
+    fetch("https://bookwise-1-8sk2.onrender.com/api/reviews")
       .then(response => response.json())
       .then(data => {
         const reviewsContainer = document.getElementById("reviews");
