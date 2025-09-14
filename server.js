@@ -19,9 +19,11 @@ mongoose
 // User schema
 const userSchema = new mongoose.Schema({
   username: String,
+  email: String,
   password: String,
-   role: { type: String, default: "user" }, 
+  role: { type: String, default: "user" } // optional if you want roles (admin/user)
 });
+
 const User = mongoose.model("User", userSchema);
 
 // Review schema
