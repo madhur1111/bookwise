@@ -1,8 +1,8 @@
 :root {
-  /* Metallic Sky Blue Theme */
-  --sky-light: #f0f9ff;
-  --sky: #38bdf8;
-  --sky-dark: #0284c7;
+  /* Teal Green Theme */
+  --sky-light: #e6f9f7;
+  --sky: #14b8a6;
+  --sky-dark: #0d9488;
   --accent: #0f172a;
   --text-dark: #0f172a;
   --text-light: #475569;
@@ -50,7 +50,7 @@ nav a {
 }
 
 nav a:hover {
-  color: #bae6fd;
+  color: #99f6e4;
 }
 
 /* Container */
@@ -66,13 +66,13 @@ nav a:hover {
   border-radius: 16px;
   padding: 1.5rem;
   margin-bottom: 1.5rem;
-  box-shadow: 0 6px 20px rgba(2,132,199,0.12);
+  box-shadow: 0 6px 20px rgba(13,148,136,0.12);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 12px 25px rgba(2,132,199,0.25);
+  box-shadow: 0 12px 25px rgba(13,148,136,0.25);
 }
 
 /* Review Cards */
@@ -83,7 +83,7 @@ nav a:hover {
   padding: 1rem;
   margin: 1rem 0;
   transition: all 0.3s ease;
-  box-shadow: 0 6px 20px rgba(2,132,199,0.08);
+  box-shadow: 0 6px 20px rgba(13,148,136,0.08);
 }
 
 .review-card h3 {
@@ -110,13 +110,30 @@ button, .btn {
   cursor: pointer;
   font-size: 0.95rem;
   font-weight: 500;
-  transition: transform 0.2s ease, box-shadow 0.3s ease;
+  position: relative;
+  overflow: hidden;
 }
 
-button:hover, .btn:hover {
-  background: linear-gradient(135deg, var(--sky-dark), var(--sky));
-  box-shadow: 0 6px 15px rgba(2,132,199,0.3);
-  transform: translateY(-2px);
+/* Looping Shine Effect */
+button::after, .btn::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -150%;
+  width: 120%;
+  height: 100%;
+  background: linear-gradient(
+    120deg,
+    transparent,
+    rgba(255,255,255,0.6),
+    transparent
+  );
+  animation: shine 3s infinite linear;
+}
+
+@keyframes shine {
+  0% { left: -150%; }
+  100% { left: 150%; }
 }
 
 button:active {
@@ -126,6 +143,15 @@ button:active {
 /* Delete button (danger) */
 button.delete {
   background: linear-gradient(135deg, #ef4444, #dc2626);
+}
+
+button.delete::after {
+  background: linear-gradient(
+    120deg,
+    transparent,
+    rgba(255,255,255,0.4),
+    transparent
+  );
 }
 
 button.delete:hover {
@@ -159,7 +185,7 @@ input, select, textarea {
 input:focus, select:focus, textarea:focus {
   outline: none;
   border-color: var(--sky);
-  box-shadow: 0 0 0 2px rgba(56,189,248,0.4);
+  box-shadow: 0 0 0 2px rgba(20,184,166,0.4);
 }
 
 /* Toast Notification */
@@ -238,14 +264,14 @@ input:focus, select:focus, textarea:focus {
   background: white;
   border-radius: 14px;
   padding: 1rem;
-  box-shadow: 0 6px 20px rgba(2,132,199,0.12);
+  box-shadow: 0 6px 20px rgba(13,148,136,0.12);
   scroll-snap-align: start;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .review-slide:hover {
   transform: translateY(-6px);
-  box-shadow: 0 12px 25px rgba(2,132,199,0.25);
+  box-shadow: 0 12px 25px rgba(13,148,136,0.25);
 }
 
 .review-slide h4 {
@@ -282,7 +308,7 @@ input:focus, select:focus, textarea:focus {
   border-radius: 16px;
   padding: 1.5rem;
   text-align: center;
-  box-shadow: 0 6px 20px rgba(2,132,199,0.12);
+  box-shadow: 0 6px 20px rgba(13,148,136,0.12);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   opacity: 0;
   animation: slideInUp 0.8s forwards;
@@ -290,7 +316,7 @@ input:focus, select:focus, textarea:focus {
 
 .team-card:hover {
   transform: translateY(-8px);
-  box-shadow: 0 12px 28px rgba(2,132,199,0.25);
+  box-shadow: 0 12px 28px rgba(13,148,136,0.25);
 }
 
 .team-card:nth-child(1) { animation-delay: 0.2s; }
@@ -305,7 +331,7 @@ input:focus, select:focus, textarea:focus {
   object-fit: cover;
   margin-bottom: 1rem;
   border: 3px solid var(--sky);
-  box-shadow: 0 0 12px rgba(56,189,248,0.6);
+  box-shadow: 0 0 12px rgba(20,184,166,0.6);
 }
 
 .team-card h4 {
@@ -344,7 +370,7 @@ input:focus, select:focus, textarea:focus {
 
 #recent div:hover {
   transform: translateY(-6px);
-  box-shadow: 0 8px 25px rgba(2,132,199,0.25);
+  box-shadow: 0 8px 25px rgba(13,148,136,0.25);
 }
 
 #recent div:nth-child(1) { animation-delay: 0.2s; }
@@ -359,7 +385,7 @@ input:focus, select:focus, textarea:focus {
   border-radius: 12px;
   padding: 15px;
   margin-top: 12px;
-  box-shadow: 0 4px 10px rgba(2,132,199,0.05);
+  box-shadow: 0 4px 10px rgba(13,148,136,0.05);
   transition: transform 0.2s;
 }
 .single-review-card:hover {
@@ -384,21 +410,23 @@ input:focus, select:focus, textarea:focus {
   align-items: center;
   justify-content: center;
   margin-right: 10px;
+  position: relative;
+  overflow: hidden;
 }
-.review-user {
-  font-weight: bold;
-  color: #333;
-  margin: 0;
-}
-.review-rating {
-  font-size: 14px;
-  color: #ff9800;
-  margin: 0;
-}
-.review-text {
-  font-style: italic;
-  color: #444;
-  margin: 8px 0 0 0;
+.avatar::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -150%;
+  width: 120%;
+  height: 100%;
+  background: linear-gradient(
+    120deg,
+    transparent,
+    rgba(255,255,255,0.5),
+    transparent
+  );
+  animation: shine 3s infinite linear;
 }
 
 /* Delete button */
@@ -415,3 +443,4 @@ input:focus, select:focus, textarea:focus {
 .delete-btn:hover {
   background: #e60000;
 }
+
