@@ -11,7 +11,15 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, "public")));
 
 // --- MongoDB Connection ---
-mongoose.connect("mongodb+srv://madhursalunke07:Madhur@0309@bookwise.st2qq7m.mongodb.net/");
+const mongoose = require("mongoose");
+
+mongoose.connect(process.env.MONGO_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+})
+.then(() => console.log("✅ MongoDB connected"))
+.catch(err => console.error("❌ MongoDB connection error:", err));
+
 
 // --- Schemas & Models ---
 const userSchema = new mongoose.Schema({
