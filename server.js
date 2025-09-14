@@ -92,6 +92,51 @@ app.delete("/api/deleteReview", async (req, res) => {
     res.json({ success: false, message: "Error deleting review" });
   }
 });
+// Borrow schema
+const borrowSchema = new mongoose.Schema({
+  username: String,
+  book: String,
+  borrowDate: Date,
+  returnDate: Date,
+});
+const Borrow = mongoose.model("Borrow", borrowSchema);
+
+// Add borrow record
+app.post("/api/borrow", async (req, res) => {
+  try {
+    const { username, book, borrowDate, returnDate } = req.body;
+    const newBorrow = new Borrow({ username, book, borrowDate, returnDate });
+    await newBorrow.save();
+    res.json({ success: true, message: "Borrow record added successfully" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, message: "Error adding borrow record" });
+  }
+});
+
+// Get all borrow records
+app.get("/api/borrow", async (req, res) => {
+  try {
+    const records = await Borrow.find();
+    res.json(records);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json([]);
+  }
+});
+
+// Delete a borrow record
+app.delete("/api/borrow/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    await Borrow.findByIdAndDelete(id);
+    res.json({ success: true, message: "Borrow record deleted successfully" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, message: "Error deleting borrow record" });
+  }
+});
+
 
 // Start server
 const PORT = process.env.PORT || 4000;
