@@ -55,7 +55,7 @@
   }
 
   function deleteReview(id) {
-    fetch(`https://bookwise-1-8sk2.onrender.com/deleteReview?id=${id}`, {
+    fetch(`https://bookwise-1-8sk2.onrender.com/api/deleteReview?id=${id}`, {
       method: "DELETE"
     })
       .then(response => response.json())
