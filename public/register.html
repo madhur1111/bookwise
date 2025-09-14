@@ -1,0 +1,51 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Register • Bookwise</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+<header><h1>Register</h1></header>
+<main class="container">
+  <div class="form-card">
+    <form id="regForm">
+      <label>Full name / username</label>
+      <input id="username" required placeholder="e.g. john.doe">
+      <label>College email (@pccoer.in)</label>
+      <input id="email" type="email" required placeholder="you@pccoer.in">
+      <label>Password</label>
+      <input id="password" type="password" required>
+      <button type="submit">Create account</button>
+      <p id="msg" class="small muted"></p>
+    </form>
+    <p class="small">Already have an account? <a href="/login.html">Login</a></p>
+  </div>
+</main>
+
+<script>
+  document.getElementById("regForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const username = document.getElementById("username").value.trim();
+    const email = document.getElementById("email").value.trim().toLowerCase();
+    const password = document.getElementById("password").value;
+    const msg = document.getElementById("msg");
+    msg.textContent = "";
+    if (!email.endsWith("@pccoer.in")) { msg.textContent = "Please use your @pccoer.in email."; return; }
+    try {
+      const res = await fetch("/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, email, password })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Registration failed");
+      msg.style.color = "green"; msg.textContent = "Registered — redirecting to login...";
+      setTimeout(() => location = "/login.html", 900);
+    } catch (err) {
+      msg.style.color = "crimson"; msg.textContent = err.message;
+    }
+  });
+</script>
+</body>
+</html>

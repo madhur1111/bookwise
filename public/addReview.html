@@ -1,0 +1,84 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Add Review • Bookwise</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+<header>
+  <h1>Add Review</h1>
+  <nav>
+    <a href="/index.html">Home</a>
+    <a href="/reviews.html">Reviews</a>
+    <a href="/borrow.html">Borrow Records</a>
+    <a href="/login.html" id="loginLink">Login</a>
+    <a href="#" id="logoutLink" style="display:none">Logout</a>
+  </nav>
+</header>
+
+<main class="container">
+  <div class="card">
+    <h2>Submit Your Review</h2>
+    <form id="reviewForm">
+      <input type="text" id="title" placeholder="Book Title" required>
+      <input type="text" id="author" placeholder="Author" required>
+      <textarea id="review" placeholder="Write your review..." required></textarea>
+      <input type="number" id="rating" min="1" max="5" placeholder="Rating (1–5)" required>
+      <button class="btn" type="submit">Submit Review</button>
+    </form>
+  </div>
+</main>
+
+<div id="toast"></div>
+
+<script>
+  const token = localStorage.getItem("token");
+  const user = JSON.parse(localStorage.getItem("user") || "null");
+  const loginLink = document.getElementById("loginLink");
+  const logoutLink = document.getElementById("logoutLink");
+
+  if (user) {
+    loginLink.style.display = "none";
+    logoutLink.style.display = "inline";
+  }
+  logoutLink.addEventListener("click", e => {
+    e.preventDefault();
+    localStorage.clear();
+    location = "/login.html";
+  });
+
+  document.getElementById("reviewForm").addEventListener("submit", async e => {
+    e.preventDefault();
+    const body = {
+      title: document.getElementById("title").value,
+      author: document.getElementById("author").value,
+      review: document.getElementById("review").value,
+      rating: parseInt(document.getElementById("rating").value)
+    };
+    const res = await fetch("/reviews", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + token
+      },
+      body: JSON.stringify(body)
+    });
+    if (!res.ok) {
+      showToast("Failed to add review");
+      return;
+    }
+    showToast("Review added successfully");
+    setTimeout(() => location = "/reviews.html", 1500);
+  });
+
+  function showToast(msg) {
+    const t = document.getElementById("toast");
+    t.textContent = msg;
+    t.className = "show";
+    setTimeout(() => t.className = "", 2500);
+  }
+</script>
+</body>
+</html>

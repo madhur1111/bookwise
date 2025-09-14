@@ -1,0 +1,126 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Borrow Records • Bookwise</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+<header>
+  <h1>Borrow Records</h1>
+  <nav>
+    <a href="/index.html">Home</a>
+    <a href="/reviews.html">Reviews</a>
+    <a href="/addReview.html">Add Review</a>
+    <a href="/login.html" id="loginLink">Login</a>
+    <a href="#" id="logoutLink" style="display:none">Logout</a>
+  </nav>
+</header>
+
+<main class="container">
+  <div class="card" id="borrowFormCard" style="display:none">
+    <h2>Add Borrow Record</h2>
+    <form id="borrowForm">
+      <input type="text" id="username" placeholder="Username" required>
+      <input type="text" id="book" placeholder="Book Title" required>
+      <input type="date" id="borrowDate" required>
+      <input type="date" id="returnDate" required>
+      <button class="btn" type="submit">Add Record</button>
+    </form>
+  </div>
+
+  <div class="card">
+    <h2>All Borrow Records</h2>
+    <div id="records"></div>
+  </div>
+</main>
+
+<div id="toast"></div>
+
+<script>
+  const token = localStorage.getItem("token");
+  const user = JSON.parse(localStorage.getItem("user") || "null");
+  const loginLink = document.getElementById("loginLink");
+  const logoutLink = document.getElementById("logoutLink");
+  const borrowFormCard = document.getElementById("borrowFormCard");
+
+  if (user) {
+    loginLink.style.display = "none";
+    logoutLink.style.display = "inline";
+    if (user.role === "admin") borrowFormCard.style.display = "block"; // only admin sees form
+  }
+  logoutLink.addEventListener("click", e => {
+    e.preventDefault();
+    localStorage.clear();
+    location = "/login.html";
+  });
+
+  document.getElementById("borrowForm").addEventListener("submit", async e => {
+    e.preventDefault();
+    const body = {
+      username: document.getElementById("username").value,
+      book: document.getElementById("book").value,
+      borrowDate: document.getElementById("borrowDate").value,
+      returnDate: document.getElementById("returnDate").value
+    };
+    const res = await fetch("/borrow", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + token
+      },
+      body: JSON.stringify(body)
+    });
+    if (!res.ok) {
+      showToast("Failed to add record");
+      return;
+    }
+    showToast("Record added");
+    e.target.reset();
+    load();
+  });
+
+  async function load() {
+    const res = await fetch("/borrow", {
+      headers: { "Authorization": "Bearer " + token }
+    });
+    if (!res.ok) return;
+    const records = await res.json();
+    const container = document.getElementById("records");
+    container.innerHTML = "";
+    records.forEach(r => {
+      const d = document.createElement("div");
+      d.className = "card";
+      d.innerHTML = `<h3>${r.book}</h3>
+        <p>User: ${r.username}</p>
+        <p>Borrowed: ${r.borrowDate}</p>
+        <p>Return: ${r.returnDate}</p>`;
+      if (user && user.role === "admin") {
+        const b = document.createElement("button");
+        b.textContent = "Delete";
+        b.style.background = "#ef4444";
+        b.onclick = async () => {
+          const res = await fetch("/borrow/" + r._id, {
+            method: "DELETE",
+            headers: { "Authorization": "Bearer " + token }
+          });
+          if (res.ok) { showToast("Record deleted"); load(); }
+        };
+        d.appendChild(b);
+      }
+      container.appendChild(d);
+    });
+  }
+
+  load();
+
+  function showToast(msg) {
+    const t = document.getElementById("toast");
+    t.textContent = msg;
+    t.className = "show";
+    setTimeout(() => t.className = "", 2500);
+  }
+</script>
+</body>
+</html>
