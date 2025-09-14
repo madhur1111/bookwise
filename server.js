@@ -7,6 +7,7 @@ const app = express();
 app.use(bodyParser.json());
 app.use(cors());
 
+
 // MongoDB connection
 mongoose
   .connect(process.env.MONGO_URI, {
@@ -15,6 +16,14 @@ mongoose
   })
   .then(() => console.log("MongoDB connected"))
   .catch((err) => console.error("MongoDB connection error:", err));
+
+// User schema
+const userSchema = new mongoose.Schema({
+  username: String,
+  email: String,
+  password: String,
+  role: { type: String, default: "user" } // optional if you want roles (admin/user)
+});
 
 //admindefault
 async function createDefaultAdmin() {
@@ -35,13 +44,6 @@ async function createDefaultAdmin() {
 createDefaultAdmin();
 
 
-// User schema
-const userSchema = new mongoose.Schema({
-  username: String,
-  email: String,
-  password: String,
-  role: { type: String, default: "user" } // optional if you want roles (admin/user)
-});
 
 const User = mongoose.model("User", userSchema);
 
