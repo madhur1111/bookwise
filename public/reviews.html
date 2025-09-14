@@ -21,7 +21,7 @@
   <div class="card">
     <h2>Community Reviews</h2>
     <div id="averageRating" style="margin-bottom:10px; font-weight:bold;"></div>
-    <input id="search" placeholder="Search by title or author..." style="margin-top:10px">
+    <input id="search" placeholder="Search by title, author, or reviewer..." style="margin-top:10px">
     <select id="ratingFilter">
       <option value="">All Ratings</option>
       <option value="5">5★</option>
@@ -37,8 +37,8 @@
 
 <script>
   let allReviews = [];
-  let expandedBooks = {}; // track which books are expanded
-  const currentUser = JSON.parse(localStorage.getItem("user") || "{}"); // ✅ check logged user
+  let expandedBooks = {}; 
+  const currentUser = JSON.parse(localStorage.getItem("user") || "{}");
 
   function loadReviews() {
     fetch("https://bookwise-1-8sk2.onrender.com/api/reviews")
@@ -59,7 +59,7 @@
 
     reviewsContainer.innerHTML = "";
 
-    // ✅ group reviews by book
+    // group reviews by book
     const grouped = {};
     allReviews.forEach(r => {
       if (!grouped[r.book]) grouped[r.book] = [];
@@ -79,7 +79,9 @@
       // apply search
       if (
         !bookName.toLowerCase().includes(searchValue) &&
-        !reviews.some(r => r.review && r.review.toLowerCase().includes(searchValue))
+        !reviews.some(r => (r.author && r.author.toLowerCase().includes(searchValue)) ||
+                           (r.username && r.username.toLowerCase().includes(searchValue)) ||
+                           (r.review && r.review.toLowerCase().includes(searchValue)))
       ) return;
 
       // apply rating filter
@@ -99,6 +101,7 @@
 
       let html = `
         <h3>${bookName}</h3>
+        <p><em>by ${reviews[0].author || "Unknown Author"}</em></p>
         <p>⭐ ${avgRating}/5 (${reviews.length} reviews)</p>
       `;
 
