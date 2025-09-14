@@ -48,31 +48,25 @@
 <div id="toast"></div>
 
 <script>
-  const user = JSON.parse(localStorage.getItem("user") || "null");
-  const loginLink = document.getElementById("loginLink");
-  const logoutLink = document.getElementById("logoutLink");
-  if (user) { loginLink.style.display = "none"; logoutLink.style.display = "inline"; showToast("Welcome, "+user.username+"!"); }
-  logoutLink.addEventListener("click", e => { e.preventDefault(); localStorage.clear(); location="/login.html"; });
-
-  async function loadRecent() {
-    const res = await fetch("/reviews");
-    const reviews = await res.json();
-    const container = document.getElementById("recent");
-    container.innerHTML = "";
-    reviews.slice(0,3).forEach(r=>{
-      const d=document.createElement("div");
-      d.className="card";
-      d.innerHTML=`<h3>${r.title}</h3><p>${r.review.substring(0,80)}...</p><p class="small">By ${r.author}</p>`;
-      container.appendChild(d);
-    });
+  function loadReviews() {
+    fetch("https://bookwise-1-8sk2.onrender.com/reviews")
+      .then(response => response.json())
+      .then(data => {
+        const reviewsContainer = document.getElementById("reviews");
+        reviewsContainer.innerHTML = "";
+        data.forEach(review => {
+          const div = document.createElement("div");
+          div.innerHTML = `<p><strong>${review.book}</strong>: ${review.review}</p>`;
+          reviewsContainer.appendChild(div);
+        });
+      })
+      .catch(error => {
+        console.error("Error:", error);
+      });
   }
-  loadRecent();
 
-  function showToast(msg) {
-    const t=document.getElementById("toast");
-    t.textContent=msg; t.className="show";
-    setTimeout(()=>t.className="",2500);
-  }
+  window.onload = loadReviews;
 </script>
+
 </body>
 </html>
