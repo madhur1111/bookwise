@@ -31,7 +31,7 @@ const reviewSchema = new mongoose.Schema({
 const Review = mongoose.model("Review", reviewSchema);
 
 // Register route
-app.post("/register", async (req, res) => {
+app.post("/api/register", async (req, res) => {
   try {
     const { username, password } = req.body;
     const existing = await User.findOne({ username });
@@ -47,7 +47,7 @@ app.post("/register", async (req, res) => {
 });
 
 // Login route
-app.post("/login", async (req, res) => {
+app.post("/api/login", async (req, res) => {
   try {
     const { username, password } = req.body;
     const user = await User.findOne({ username, password });
@@ -61,7 +61,7 @@ app.post("/login", async (req, res) => {
 });
 
 // Add review route
-app.post("/addReview", async (req, res) => {
+app.post("/api/addReview", async (req, res) => {
   try {
     const { book, review } = req.body;
     const newReview = new Review({ book, review });
@@ -73,7 +73,7 @@ app.post("/addReview", async (req, res) => {
 });
 
 // Get reviews
-app.get("/reviews", async (req, res) => {
+app.get("/api/reviews", async (req, res) => {
   try {
     const reviews = await Review.find();
     res.json(reviews);
@@ -83,7 +83,7 @@ app.get("/reviews", async (req, res) => {
 });
 
 // Delete review
-app.delete("/deleteReview", async (req, res) => {
+app.delete("/api/deleteReview", async (req, res) => {
   try {
     const { id } = req.query;
     await Review.findByIdAndDelete(id);
