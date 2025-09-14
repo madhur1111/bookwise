@@ -5,6 +5,68 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Bookwise • Home</title>
   <link rel="stylesheet" href="/styles.css">
+  <style>
+    /* Recent Reviews Carousel */
+    .recent-reviews {
+      display: flex;
+      gap: 1rem;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      padding: 1rem 0;
+    }
+    .recent-reviews::-webkit-scrollbar { display: none; }
+    .review-slide {
+      flex: 0 0 250px;
+      background: white;
+      border-radius: 14px;
+      padding: 1rem;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+      scroll-snap-align: start;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .review-slide:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 12px 25px rgba(0,0,0,0.15);
+    }
+    .review-slide h4 { margin: 0; font-size: 1.1rem; color: #374151; }
+    .review-slide p { font-size: 0.9rem; color: #4b5563; margin: 0.3rem 0; }
+    .review-slide .stars { color: #facc15; margin-top: 0.3rem; }
+    .recent-reviews .review-slide:nth-child(n+16) { display: none; }
+
+    /* Team Section */
+    .team-section {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.5rem;
+      margin-top: 1rem;
+    }
+    .team-card {
+      background: white;
+      border-radius: 16px;
+      padding: 1.5rem;
+      text-align: center;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .team-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 12px 28px rgba(0,0,0,0.15);
+    }
+    .team-card img {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-bottom: 1rem;
+      border: 3px solid #6366f1;
+    }
+    .team-card h4 { margin: 0.3rem 0; font-size: 1.1rem; color: #111827; }
+    .team-card p { font-size: 0.9rem; color: #6b7280; }
+
+    @media (max-width: 600px) {
+      .review-slide { flex: 0 0 200px; }
+    }
+  </style>
 </head>
 <body>
 <header>
@@ -31,17 +93,33 @@
 
   <div class="card">
     <h2>Recent Reviews</h2>
-    <div id="recent"></div>
+    <div id="recent" class="recent-reviews"></div>
   </div>
 
   <div class="card">
     <h2>Team Members</h2>
-    <ul class="team-list">
-      <li>Madhur Salunke</li>
-      <li>Rohan Sahoo</li>
-      <li>Siddesh Salunke</li>
-      <li>Charvi Sahani</li>
-    </ul>
+    <div class="team-section">
+      <div class="team-card">
+        <img src="https://via.placeholder.com/100" alt="Madhur">
+        <h4>Madhur Salunke</h4>
+        <p>Team Lead</p>
+      </div>
+      <div class="team-card">
+        <img src="https://via.placeholder.com/100" alt="Rohan">
+        <h4>Rohan Sahoo</h4>
+        <p>Backend Developer</p>
+      </div>
+      <div class="team-card">
+        <img src="https://via.placeholder.com/100" alt="Siddesh">
+        <h4>Siddesh Salunke</h4>
+        <p>Frontend Developer</p>
+      </div>
+      <div class="team-card">
+        <img src="https://via.placeholder.com/100" alt="Charvi">
+        <h4>Charvi Sahani</h4>
+        <p>UI/UX Designer</p>
+      </div>
+    </div>
   </div>
 </main>
 
@@ -54,9 +132,14 @@
       .then(data => {
         const reviewsContainer = document.getElementById("recent");
         reviewsContainer.innerHTML = "";
-        data.forEach(review => {
+        data.slice(-15).forEach(review => {
           const div = document.createElement("div");
-          div.innerHTML = `<p><strong>${review.book}</strong>: ${review.review}</p>`;
+          div.className = "review-slide";
+          div.innerHTML = `
+            <h4>${review.book}</h4>
+            <p>"${review.review}"</p>
+            ${review.rating ? `<div class="stars">⭐ ${review.rating}/5</div>` : ""}
+          `;
           reviewsContainer.appendChild(div);
         });
       })
@@ -65,7 +148,6 @@
       });
   }
 
-  // ✅ Check login status
   function checkLogin() {
     const user = JSON.parse(localStorage.getItem("user"));
     const loginLink = document.getElementById("loginLink");
@@ -79,11 +161,10 @@
       logoutLink.style.display = "none";
     }
 
-    // ✅ Logout button clears storage
     logoutLink.addEventListener("click", () => {
       localStorage.removeItem("token");
       localStorage.removeItem("user");
-      location.reload(); // refresh to update navbar
+      location.reload();
     });
   }
 
