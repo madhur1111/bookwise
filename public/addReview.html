@@ -34,25 +34,32 @@
 <div id="toast"></div>
 
 <script>
-  document.getElementById("reviewForm").addEventListener("submit", async (e) => {
-    e.preventDefault();
+  document.getElementById("reviewForm").addEventListener("submit", function (event) {
+    event.preventDefault();
+
     const book = document.getElementById("book").value;
     const review = document.getElementById("review").value;
 
-    const res = await fetch("https://bookwise-1-8sk2.onrender.com/addReview", {
+    fetch("https://bookwise-1-8sk2.onrender.com/addReview", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ book, review })
-    });
-
-    const data = await res.json();
-    if (data.success) {
-      window.location.href = "reviews.html";
-    } else {
-      alert(data.message);
-    }
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ book: book, review: review })
+    })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          alert("Review added!");
+          window.location.href = "reviews.html";
+        } else {
+          alert("Failed to add review: " + data.message);
+        }
+      })
+      .catch(error => {
+        console.error("Error:", error);
+      });
   });
 </script>
-
 </body>
 </html>
