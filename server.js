@@ -80,28 +80,21 @@ app.post("/api/register", async (req, res) => {
 app.post("/api/login", async (req, res) => {
   try {
     const { email, password } = req.body;
-
-    // Check if user exists in DB
     let user = await User.findOne({ email, password });
 
-    // If not found, check for hardcoded default admin
     if (!user && email === "admin@pccoer.in" && password === "admin123") {
       user = {
         username: "Admin",
         email: "admin@pccoer.in",
-        password: "admin123",
         role: "admin",
       };
     }
 
     if (!user) {
-      return res.json({ success: false, message: "Invalid credentials" });
+      return res.status(401).json({ error: "Invalid credentials" }); // ✅ send 401 + error
     }
 
-    // Send user data (you can also add JWT here later if needed)
     res.json({
-      success: true,
-      message: "Login successful",
       token: "dummy-token-123",
       user: {
         username: user.username,
@@ -110,10 +103,9 @@ app.post("/api/login", async (req, res) => {
       },
     });
   } catch (err) {
-    res.json({ success: false, message: "Error logging in" });
+    res.status(500).json({ error: "Server error" }); // ✅ send 500
   }
 });
-
 
 
 // Add review route
