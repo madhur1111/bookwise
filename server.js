@@ -24,6 +24,7 @@ const userSchema = new mongoose.Schema({
   password: String,
   role: { type: String, default: "user" } // optional if you want roles (admin/user)
 });
+const User = mongoose.model("User", userSchema);
 
 //admindefault
 async function createDefaultAdmin() {
@@ -42,10 +43,6 @@ async function createDefaultAdmin() {
   }
 }
 createDefaultAdmin();
-
-
-
-const User = mongoose.model("User", userSchema);
 
 // Review schema
 const reviewSchema = new mongoose.Schema({
