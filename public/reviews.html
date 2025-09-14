@@ -36,31 +36,19 @@
 <div id="toast"></div>
 
 <script>
-  let allReviews = []; 
-  let showAll = false; // control toggle
+  let allReviews = [];
+  let expandedBooks = {}; // track which books are expanded
 
   function loadReviews() {
     fetch("https://bookwise-1-8sk2.onrender.com/api/reviews")
       .then(response => response.json())
       .then(data => {
         allReviews = data;
-        renderAverage();
         renderReviews();
       })
       .catch(error => {
         console.error("Error:", error);
       });
-  }
-
-  function renderAverage() {
-    if (allReviews.length === 0) {
-      document.getElementById("averageRating").innerText = "No reviews yet.";
-      return;
-    }
-
-    const sum = allReviews.reduce((acc, r) => acc + (parseInt(r.rating) || 0), 0);
-    const avg = (sum / allReviews.length).toFixed(1);
-    document.getElementById("averageRating").innerText = `⭐ ${avg}/5 from ${allReviews.length} reviews`;
   }
 
   function renderReviews() {
@@ -70,47 +58,77 @@
 
     reviewsContainer.innerHTML = "";
 
-    let filtered = allReviews.filter(r => {
-      let matchSearch = r.book.toLowerCase().includes(searchValue) || (r.review && r.review.toLowerCase().includes(searchValue));
-      let matchRating = true;
-
-      if (ratingFilter) {
-        const rating = parseInt(r.rating || 0);
-        matchRating = rating >= parseInt(ratingFilter);
-      }
-
-      return matchSearch && matchRating;
+    // ✅ group reviews by book
+    const grouped = {};
+    allReviews.forEach(r => {
+      if (!grouped[r.book]) grouped[r.book] = [];
+      grouped[r.book].push(r);
     });
 
-    if (filtered.length === 0) {
+    const books = Object.keys(grouped);
+
+    if (books.length === 0) {
       reviewsContainer.innerHTML = "<p>No reviews found.</p>";
-      document.getElementById("toggleButton").style.display = "none";
       return;
     }
 
-    // Show first 3 by default, or all if toggled
-    const visibleReviews = showAll ? filtered : filtered.slice(0, 3);
+    books.forEach(bookName => {
+      let reviews = grouped[bookName];
 
-    visibleReviews.forEach(review => {
+      // apply search
+      if (
+        !bookName.toLowerCase().includes(searchValue) &&
+        !reviews.some(r => r.review && r.review.toLowerCase().includes(searchValue))
+      ) return;
+
+      // apply rating filter
+      if (ratingFilter) {
+        const avg = reviews.reduce((a, r) => a + (parseInt(r.rating) || 0), 0) / reviews.length;
+        if (avg < parseInt(ratingFilter)) return;
+      }
+
+      // calculate average rating for this book
+      const avgRating = (
+        reviews.reduce((a, r) => a + (parseInt(r.rating) || 0), 0) / reviews.length
+      ).toFixed(1);
+
+      // create book card
       const div = document.createElement("div");
       div.classList.add("review-card");
-      div.innerHTML = `
-        <p><strong>${review.book}</strong> ${review.author ? `by ${review.author}` : ""}</p>
-        <p>${review.review}</p>
-        ${review.rating ? `<p>⭐ ${review.rating}/5</p>` : ""}
-        <button onclick="deleteReview('${review._id}')">Delete</button>
+
+      let html = `
+        <h3>${bookName}</h3>
+        <p>⭐ ${avgRating}/5 (${reviews.length} reviews)</p>
       `;
+
+      // show reviews: either first one or all
+      const showAll = expandedBooks[bookName];
+      const visibleReviews = showAll ? reviews : [reviews[0]];
+
+      visibleReviews.forEach(r => {
+        html += `
+          <div class="single-review">
+            <p><strong>${r.username || "Anonymous"}</strong>: ${r.review}</p>
+            ${r.rating ? `<p>⭐ ${r.rating}/5</p>` : ""}
+            <button onclick="deleteReview('${r._id}')">Delete</button>
+          </div>
+        `;
+      });
+
+      if (reviews.length > 1) {
+        html += `<button onclick="toggleBook('${bookName}')">
+                  ${showAll ? "Show Less" : "See All Reviews"}
+                 </button>`;
+      }
+
+      div.innerHTML = html;
       reviewsContainer.appendChild(div);
     });
+  }
 
-    // Toggle button visible only if more than 3
-    const toggleButton = document.getElementById("toggleButton");
-    if (filtered.length > 3) {
-      toggleButton.style.display = "block";
-      toggleButton.innerText = showAll ? "Show Less" : "See All Reviews";
-    } else {
-      toggleButton.style.display = "none";
-    }
+  function toggleBook(bookName) {
+    expandedBooks[bookName] = !expandedBooks[bookName];
+    renderReviews();
   }
 
   function deleteReview(id) {
@@ -131,18 +149,12 @@
       });
   }
 
-  // filters
   document.getElementById("search").addEventListener("input", renderReviews);
   document.getElementById("ratingFilter").addEventListener("change", renderReviews);
 
-  // toggle reviews
-  document.getElementById("toggleButton").addEventListener("click", () => {
-    showAll = !showAll;
-    renderReviews();
-  });
-
   window.onload = loadReviews;
 </script>
+
 
 </body>
 </html>
