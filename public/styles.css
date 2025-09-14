@@ -1,160 +1,31 @@
 :root {
-  --cyan: #4dd0e1;
-  --cyan-dark: #26c6da;
-  --cyan-light: #e0f7fa;
-  --text-dark: #333;
-  --text-light: #666;
+  /* Metallic Sky Blue Theme */
+  --sky-light: #f0f9ff;
+  --sky: #38bdf8;
+  --sky-dark: #0284c7;
+  --accent: #0f172a;
+  --text-dark: #0f172a;
+  --text-light: #475569;
   --danger: #ef4444;
   --success: #22c55e;
-  --bg: #f8fafc;
+  --bg: var(--sky-light);
 }
 
-body {
-  font-family: Arial, sans-serif;
-  margin: 0;
-  background: var(--bg);
-  color: var(--text-dark);
-}
-
-header {
-  background: var(--cyan);
-  padding: 16px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  color: white;
-}
-
-header h1 {
-  margin: 0;
-}
-
-nav a {
-  color: white;
-  text-decoration: none;
-  margin-left: 12px;
-  font-weight: bold;
-}
-
-.container {
-  max-width: 900px;
-  margin: 20px auto;
-  padding: 0 16px;
-}
-
-.card {
-  background: white;
-  border-radius: 8px;
-  padding: 16px;
-  margin: 12px 0;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-  animation: fadeInUp 0.5s ease both;
-}
-
-button, .btn {
-  background: var(--cyan-dark);
-  border: none;
-  color: white;
-  padding: 8px 16px;
-  border-radius: 6px;
-  cursor: pointer;
-  margin-top: 10px;
-  font-weight: bold;
-  transition: background 0.3s;
-}
-
-button:hover, .btn:hover {
-  background: var(--cyan);
-}
-
-input, textarea, select {
-  width: 100%;
-  padding: 10px;
-  margin: 8px 0;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-}
-
-textarea {
-  resize: vertical;
-}
-
-.small {
-  font-size: 0.9em;
-  color: var(--text-light);
-}
-
-.muted {
-  color: var(--text-light);
-}
-
-ul.team-list {
-  list-style: none;
-  padding: 0;
-}
-ul.team-list li {
-  padding: 4px 0;
-}
-
-/* Nested reviews */
-.card .card {
-  margin: 10px 0;
-  border: 1px solid #eee;
-  box-shadow: none;
-  background: var(--cyan-light);
-}
-
-/* Expand button for reviews */
-button.toggle-btn {
-  margin-top: 8px;
-  background: #888;
-}
-button.toggle-btn:hover {
-  background: #555;
-}
-
-/* Toast notification */
-#toast {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  background: var(--cyan-dark);
-  color: white;
-  padding: 12px 18px;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.4s, transform 0.4s;
-  transform: translateY(20px);
-  z-index: 9999;
-}
-#toast.show {
-  opacity: 1;
-  pointer-events: auto;
-  transform: translateY(0);
-}
-
-/* Animations */
-@keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
 /* General layout */
 body {
   font-family: "Segoe UI", Roboto, Arial, sans-serif;
   margin: 0;
   padding: 0;
-  background: #f9fafb;
-  color: #1f2937;
+  background: var(--bg);
+  color: var(--text-dark);
 }
 
 /* Header */
 header {
-  background: linear-gradient(135deg, #6366f1, #3b82f6);
+  background: linear-gradient(135deg, var(--sky), var(--sky-dark));
   color: white;
   padding: 1rem 2rem;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.15);
   position: sticky;
   top: 0;
   z-index: 1000;
@@ -179,7 +50,7 @@ nav a {
 }
 
 nav a:hover {
-  color: #fde68a;
+  color: #bae6fd;
 }
 
 /* Container */
@@ -195,13 +66,13 @@ nav a:hover {
   border-radius: 16px;
   padding: 1.5rem;
   margin-bottom: 1.5rem;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+  box-shadow: 0 6px 20px rgba(2,132,199,0.12);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 12px 25px rgba(0,0,0,0.12);
+  box-shadow: 0 12px 25px rgba(2,132,199,0.25);
 }
 
 /* Review Cards */
@@ -212,6 +83,7 @@ nav a:hover {
   padding: 1rem;
   margin: 1rem 0;
   transition: all 0.3s ease;
+  box-shadow: 0 6px 20px rgba(2,132,199,0.08);
 }
 
 .review-card h3 {
@@ -230,7 +102,7 @@ nav a:hover {
 
 /* Buttons */
 button, .btn {
-  background: linear-gradient(135deg, #3b82f6, #6366f1);
+  background: linear-gradient(135deg, var(--sky), var(--sky-dark));
   color: white;
   border: none;
   border-radius: 12px;
@@ -242,8 +114,8 @@ button, .btn {
 }
 
 button:hover, .btn:hover {
-  background: linear-gradient(135deg, #2563eb, #4f46e5);
-  box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+  background: linear-gradient(135deg, var(--sky-dark), var(--sky));
+  box-shadow: 0 6px 15px rgba(2,132,199,0.3);
   transform: translateY(-2px);
 }
 
@@ -286,8 +158,8 @@ input, select, textarea {
 
 input:focus, select:focus, textarea:focus {
   outline: none;
-  border-color: #6366f1;
-  box-shadow: 0 0 0 2px rgba(99,102,241,0.3);
+  border-color: var(--sky);
+  box-shadow: 0 0 0 2px rgba(56,189,248,0.4);
 }
 
 /* Toast Notification */
@@ -295,7 +167,7 @@ input:focus, select:focus, textarea:focus {
   visibility: hidden;
   min-width: 250px;
   margin-left: -125px;
-  background-color: #111827;
+  background-color: var(--accent);
   color: #fff;
   text-align: center;
   border-radius: 12px;
@@ -333,7 +205,8 @@ input:focus, select:focus, textarea:focus {
     margin: 0.5rem 0;
   }
 }
-/* ========== Expand/Collapse Reviews Animation ========== */
+
+/* Expand/Collapse Reviews Animation */
 .single-review {
   max-height: 0;
   overflow: hidden;
@@ -342,12 +215,12 @@ input:focus, select:focus, textarea:focus {
 }
 
 .single-review.show {
-  max-height: 300px; /* enough for text */
+  max-height: 300px;
   opacity: 1;
   margin: 0.5rem 0;
 }
 
-/* ========== Recent Reviews Carousel (Home Page) ========== */
+/* Recent Reviews Carousel (Home Page) */
 .recent-reviews {
   display: flex;
   gap: 1rem;
@@ -357,7 +230,7 @@ input:focus, select:focus, textarea:focus {
 }
 
 .recent-reviews::-webkit-scrollbar {
-  display: none; /* hide scrollbar */
+  display: none;
 }
 
 .review-slide {
@@ -365,14 +238,14 @@ input:focus, select:focus, textarea:focus {
   background: white;
   border-radius: 14px;
   padding: 1rem;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+  box-shadow: 0 6px 20px rgba(2,132,199,0.12);
   scroll-snap-align: start;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .review-slide:hover {
   transform: translateY(-6px);
-  box-shadow: 0 12px 25px rgba(0,0,0,0.15);
+  box-shadow: 0 12px 25px rgba(2,132,199,0.25);
 }
 
 .review-slide h4 {
@@ -392,12 +265,11 @@ input:focus, select:focus, textarea:focus {
   margin-top: 0.3rem;
 }
 
-/* Limit to max 15 slides (hide others) */
 .recent-reviews .review-slide:nth-child(n+16) {
   display: none;
 }
 
-/* ========== Team Section ========== */
+/* Team Section */
 .team-section {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -410,14 +282,21 @@ input:focus, select:focus, textarea:focus {
   border-radius: 16px;
   padding: 1.5rem;
   text-align: center;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+  box-shadow: 0 6px 20px rgba(2,132,199,0.12);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+  opacity: 0;
+  animation: slideInUp 0.8s forwards;
 }
 
 .team-card:hover {
   transform: translateY(-8px);
-  box-shadow: 0 12px 28px rgba(0,0,0,0.15);
+  box-shadow: 0 12px 28px rgba(2,132,199,0.25);
 }
+
+.team-card:nth-child(1) { animation-delay: 0.2s; }
+.team-card:nth-child(2) { animation-delay: 0.4s; }
+.team-card:nth-child(3) { animation-delay: 0.6s; }
+.team-card:nth-child(4) { animation-delay: 0.8s; }
 
 .team-card img {
   width: 100px;
@@ -425,7 +304,8 @@ input:focus, select:focus, textarea:focus {
   border-radius: 50%;
   object-fit: cover;
   margin-bottom: 1rem;
-  border: 3px solid #6366f1;
+  border: 3px solid var(--sky);
+  box-shadow: 0 0 12px rgba(56,189,248,0.6);
 }
 
 .team-card h4 {
@@ -439,135 +319,15 @@ input:focus, select:focus, textarea:focus {
   color: #6b7280;
 }
 
-/* Responsive */
-@media (max-width: 600px) {
-  .recent-reviews {
-    gap: 0.6rem;
-  }
-  .review-slide {
-    flex: 0 0 200px;
-  }
-}
-/* --- Team Section --- */
-.team-list {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 20px;
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.team-card {
-  background: white;
-  padding: 20px;
-  border-radius: 16px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-  text-align: center;
-  width: 180px;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.team-card:hover {
-  transform: translateY(-10px);
-  box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-}
-
-.team-card img {
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-  margin-bottom: 10px;
-  border: 3px solid #4f46e5;
-  object-fit: cover;
-}
-
-.team-card h3 {
-  font-size: 18px;
-  margin: 8px 0 4px;
-}
-
-.team-card p {
-  font-size: 14px;
-  color: #666;
-  margin: 0;
-}
-/* --- Team Section Animation --- */
+/* Animations */
 @keyframes slideInUp {
-  from {
-    opacity: 0;
-    transform: translateY(40px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(40px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-.team-card {
-  background: white;
-  padding: 20px;
-  border-radius: 16px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-  text-align: center;
-  width: 180px;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  opacity: 0; /* Start invisible */
-  animation: slideInUp 0.8s forwards;
-}
-
-.team-card:hover {
-  transform: translateY(-10px);
-  box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-}
-
-.team-card:nth-child(1) { animation-delay: 0.2s; }
-.team-card:nth-child(2) { animation-delay: 0.4s; }
-.team-card:nth-child(3) { animation-delay: 0.6s; }
-.team-card:nth-child(4) { animation-delay: 0.8s; }
-
-.team-card img {
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-  margin-bottom: 10px;
-  border: 3px solid #4f46e5;
-  object-fit: cover;
-}
-
-.team-card h3 {
-  font-size: 18px;
-  margin: 8px 0 4px;
-}
-
-.team-card p {
-  font-size: 14px;
-  color: #666;
-  margin: 0;
-}
-/* --- Recent Reviews Slider Animation --- */
 @keyframes slideInRight {
-  from {
-    opacity: 0;
-    transform: translateX(40px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-#recent {
-  display: flex;
-  overflow-x: auto;
-  gap: 16px;
-  padding: 10px 0;
-  scroll-behavior: smooth;
-}
-
-#recent::-webkit-scrollbar {
-  display: none; /* hide scrollbar for cleaner look */
+  from { opacity: 0; transform: translateX(40px); }
+  to { opacity: 1; transform: translateX(0); }
 }
 
 #recent div {
@@ -577,44 +337,29 @@ input:focus, select:focus, textarea:focus {
   padding: 16px;
   border-radius: 16px;
   box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-  opacity: 0; /* hidden before animation */
+  opacity: 0;
   animation: slideInRight 0.8s forwards;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 #recent div:hover {
   transform: translateY(-6px);
-  box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+  box-shadow: 0 8px 25px rgba(2,132,199,0.25);
 }
 
-/* staggered animation so reviews flow in */
 #recent div:nth-child(1) { animation-delay: 0.2s; }
 #recent div:nth-child(2) { animation-delay: 0.4s; }
 #recent div:nth-child(3) { animation-delay: 0.6s; }
 #recent div:nth-child(4) { animation-delay: 0.8s; }
 #recent div:nth-child(5) { animation-delay: 1s; }
-/* you can extend this pattern up to 15 reviews */
-/* Floating card style for book review blocks */
-.review-card {
-  background: #fff;
-  border-radius: 15px;
-  padding: 20px;
-  margin: 20px 0;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-.review-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 12px 25px rgba(0,0,0,0.12);
-}
 
-/* Individual reviews */
+/* Floating card style for book review blocks */
 .single-review-card {
   background: #f9fafc;
   border-radius: 12px;
   padding: 15px;
   margin-top: 12px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+  box-shadow: 0 4px 10px rgba(2,132,199,0.05);
   transition: transform 0.2s;
 }
 .single-review-card:hover {
@@ -631,7 +376,7 @@ input:focus, select:focus, textarea:focus {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #6a11cb, #2575fc);
+  background: linear-gradient(135deg, var(--sky-dark), var(--sky));
   color: white;
   font-weight: bold;
   font-size: 18px;
@@ -656,7 +401,7 @@ input:focus, select:focus, textarea:focus {
   margin: 8px 0 0 0;
 }
 
-/* Delete button (only visible for admin) */
+/* Delete button */
 .delete-btn {
   background: #ff4d4d;
   border: none;
@@ -670,4 +415,3 @@ input:focus, select:focus, textarea:focus {
 .delete-btn:hover {
   background: #e60000;
 }
-
