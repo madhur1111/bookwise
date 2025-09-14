@@ -95,5 +95,15 @@ app.delete("/deleteReview", async (req, res) => {
 
 // Start server
 const PORT = process.env.PORT || 4000;
+const path = require("path");
+
+// Serve static files from the "public" folder
+app.use(express.static(path.join(__dirname, "public")));
+
+// Serve frontend pages for any unknown route
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "index.html"));
+});
+
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 
