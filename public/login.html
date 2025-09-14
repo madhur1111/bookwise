@@ -28,11 +28,12 @@
     const password = document.getElementById("password").value;
     const msg = document.getElementById("msg");
     try {
-      const res = await fetch("/login", {
-        method: "POST",
-        headers: {"Content-Type":"application/json"},
-        body: JSON.stringify({ email, password })
-      });
+      const res = await fetch("https://bookwise-1-8sk2.onrender.com/login", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ email, password }),
+});
+
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Login failed");
       localStorage.setItem("token", data.token);
