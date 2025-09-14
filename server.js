@@ -36,8 +36,18 @@ const Review = mongoose.model("Review", reviewSchema);
 // Register route
 app.post("/api/register", async (req, res) => {
   try {
-    const { username, password } = req.body;
-    const existing = await User.findOne({ username });
+   const { username, email, password } = req.body;
+
+// Check if email already exists
+const existing = await User.findOne({ email });
+if (existing) {
+  return res.json({ success: false, message: "Email already registered" });
+}
+
+const newUser = new User({ username, email, password });
+await newUser.save();
+res.json({ success: true, message: "User registered successfully" });
+
     if (existing) {
       return res.json({ success: false, message: "Username already exists" });
     }
