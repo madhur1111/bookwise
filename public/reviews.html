@@ -38,6 +38,7 @@
 <script>
   let allReviews = [];
   let expandedBooks = {}; // track which books are expanded
+  const currentUser = JSON.parse(localStorage.getItem("user") || "{}"); // ✅ check logged user
 
   function loadReviews() {
     fetch("https://bookwise-1-8sk2.onrender.com/api/reviews")
@@ -110,7 +111,7 @@
           <div class="single-review">
             <p><strong>${r.username || "Anonymous"}</strong>: ${r.review}</p>
             ${r.rating ? `<p>⭐ ${r.rating}/5</p>` : ""}
-            <button onclick="deleteReview('${r._id}')">Delete</button>
+            ${currentUser.role === "admin" ? `<button onclick="deleteReview('${r._id}')">Delete</button>` : ""}
           </div>
         `;
       });
@@ -132,6 +133,8 @@
   }
 
   function deleteReview(id) {
+    if (!confirm("Are you sure you want to delete this review?")) return;
+
     fetch(`https://bookwise-1-8sk2.onrender.com/api/deleteReview?id=${id}`, {
       method: "DELETE"
     })
@@ -154,7 +157,6 @@
 
   window.onload = loadReviews;
 </script>
-
 
 </body>
 </html>
