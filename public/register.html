@@ -22,28 +22,23 @@
     <p class="small">Already have an account? <a href="/login.html">Login</a></p>
   </div>
 </main>
-
 <script>
-  document.getElementById("regForm").addEventListener("submit", async (e) => {
+  document.getElementById("registerForm").addEventListener("submit", async (e) => {
     e.preventDefault();
-    const username = document.getElementById("username").value.trim();
-    const email = document.getElementById("email").value.trim().toLowerCase();
+    const username = document.getElementById("username").value;
     const password = document.getElementById("password").value;
-    const msg = document.getElementById("msg");
-    msg.textContent = "";
-    if (!email.endsWith("@pccoer.in")) { msg.textContent = "Please use your @pccoer.in email."; return; }
-    try {
-      const res = await fetch("/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, email, password })
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Registration failed");
-      msg.style.color = "green"; msg.textContent = "Registered — redirecting to login...";
-      setTimeout(() => location = "/login.html", 900);
-    } catch (err) {
-      msg.style.color = "crimson"; msg.textContent = err.message;
+
+    const res = await fetch("https://bookwise-1-8sk2.onrender.com/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username, password })
+    });
+
+    const data = await res.json();
+    if (data.success) {
+      window.location.href = "login.html";
+    } else {
+      alert(data.message);
     }
   });
 </script>
