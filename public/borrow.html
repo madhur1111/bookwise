@@ -31,7 +31,11 @@
   </div>
 
   <div class="card">
-    <h2>All Borrow Records</h2>
+    <h2>Borrow Records</h2>
+    <!-- Only admin sees this search -->
+    <div id="adminSearch" style="display:none; margin-bottom:10px;">
+      <input type="text" id="searchUser" placeholder="Search by username...">
+    </div>
     <div id="records"></div>
   </div>
 </main>
@@ -44,11 +48,15 @@
   const loginLink = document.getElementById("loginLink");
   const logoutLink = document.getElementById("logoutLink");
   const borrowFormCard = document.getElementById("borrowFormCard");
+  const adminSearch = document.getElementById("adminSearch");
 
   if (user) {
     loginLink.style.display = "none";
     logoutLink.style.display = "inline";
-    if (user.role === "admin") borrowFormCard.style.display = "block"; // only admin sees form
+    if (user.role === "admin") {
+      borrowFormCard.style.display = "block"; 
+      adminSearch.style.display = "block";
+    }
   }
   logoutLink.addEventListener("click", e => {
     e.preventDefault();
@@ -82,21 +90,44 @@
   });
 
   async function load() {
-    const res =await fetch("https://bookwise-1-8sk2.onrender.com/api/borrow", 
- {
+    const res = await fetch("https://bookwise-1-8sk2.onrender.com/api/borrow", {
       headers: { "Authorization": "Bearer " + token }
     });
     if (!res.ok) return;
     const records = await res.json();
+    render(records);
+  }
+
+  function render(records) {
     const container = document.getElementById("records");
     container.innerHTML = "";
-    records.forEach(r => {
+
+    // filter for normal user
+    let filtered = records;
+    if (user && user.role !== "admin") {
+      filtered = records.filter(r => r.username === user.username);
+    }
+
+    // filter by search (admin only)
+    const searchValue = document.getElementById("searchUser").value?.toLowerCase() || "";
+    if (user && user.role === "admin" && searchValue) {
+      filtered = filtered.filter(r => r.username.toLowerCase().includes(searchValue));
+    }
+
+    if (filtered.length === 0) {
+      container.innerHTML = "<p>No records found.</p>";
+      return;
+    }
+
+    filtered.forEach(r => {
       const d = document.createElement("div");
       d.className = "card";
       d.innerHTML = `<h3>${r.book}</h3>
         <p>User: ${r.username}</p>
-        <p>Borrowed: ${r.borrowDate}</p>
-        <p>Return: ${r.returnDate}</p>`;
+        <p>Borrowed: ${new Date(r.borrowDate).toLocaleDateString()}</p>
+        <p>Return: ${new Date(r.returnDate).toLocaleDateString()}</p>`;
+      
+      // only admin can delete
       if (user && user.role === "admin") {
         const b = document.createElement("button");
         b.textContent = "Delete";
@@ -114,6 +145,9 @@
     });
   }
 
+  // reload on search input
+  document.getElementById("searchUser").addEventListener("input", load);
+
   load();
 
   function showToast(msg) {
@@ -125,3 +159,4 @@
 </script>
 </body>
 </html>
+
