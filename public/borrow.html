@@ -64,7 +64,7 @@
       borrowDate: document.getElementById("borrowDate").value,
       returnDate: document.getElementById("returnDate").value
     };
-    const res = await fetch("/borrow", {
+    const res = await fetch("https://bookwise-1-8sk2.onrender.com/api/borrow", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -82,7 +82,8 @@
   });
 
   async function load() {
-    const res = await fetch("/borrow", {
+    const res =await fetch("https://bookwise-1-8sk2.onrender.com/api/borrow", {
+ {
       headers: { "Authorization": "Bearer " + token }
     });
     if (!res.ok) return;
@@ -101,7 +102,7 @@
         b.textContent = "Delete";
         b.style.background = "#ef4444";
         b.onclick = async () => {
-          const res = await fetch("/borrow/" + r._id, {
+          const res = await fetch("https://bookwise-1-8sk2.onrender.com/api/borrow/" + r._id, {
             method: "DELETE",
             headers: { "Authorization": "Bearer " + token }
           });
