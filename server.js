@@ -102,6 +102,7 @@ app.post("/api/login", async (req, res) => {
     res.json({
       success: true,
       message: "Login successful",
+      token: "dummy-token-123",
       user: {
         username: user.username,
         email: user.email,
