@@ -55,11 +55,18 @@ app.post("/api/login", async (req, res) => {
     if (!user) {
       return res.json({ success: false, message: "Invalid credentials" });
     }
-    res.json({ success: true, message: "Login successful" });
+
+    // include role in response
+    res.json({ 
+      success: true, 
+      message: "Login successful", 
+      user: { username: user.username, role: user.role }
+    });
   } catch (err) {
     res.json({ success: false, message: "Error logging in" });
   }
 });
+
 
 // Add review route
 app.post("/api/addReview", async (req, res) => {
