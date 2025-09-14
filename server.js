@@ -26,13 +26,14 @@ const userSchema = new mongoose.Schema({
 });
 const User = mongoose.model("User", userSchema);
 
-//admindefault
+// admindefault
 async function createDefaultAdmin() {
   const adminEmail = "admin@pccoer.in";
-  const existing = await User.findOne({ username: adminEmail });
+  const existing = await User.findOne({ email: adminEmail }); // ✅ check by email
   if (!existing) {
     const adminUser = new User({
-      username: adminEmail,
+      username: "Admin",             // ✅ proper username
+      email: adminEmail,             // ✅ store email in email field
       password: "admin123",
       role: "admin"
     });
@@ -43,6 +44,7 @@ async function createDefaultAdmin() {
   }
 }
 createDefaultAdmin();
+
 
 // Review schema
 const reviewSchema = new mongoose.Schema({
