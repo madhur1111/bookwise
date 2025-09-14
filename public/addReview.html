@@ -34,51 +34,25 @@
 <div id="toast"></div>
 
 <script>
-  const token = localStorage.getItem("token");
-  const user = JSON.parse(localStorage.getItem("user") || "null");
-  const loginLink = document.getElementById("loginLink");
-  const logoutLink = document.getElementById("logoutLink");
-
-  if (user) {
-    loginLink.style.display = "none";
-    logoutLink.style.display = "inline";
-  }
-  logoutLink.addEventListener("click", e => {
+  document.getElementById("reviewForm").addEventListener("submit", async (e) => {
     e.preventDefault();
-    localStorage.clear();
-    location = "/login.html";
-  });
+    const book = document.getElementById("book").value;
+    const review = document.getElementById("review").value;
 
-  document.getElementById("reviewForm").addEventListener("submit", async e => {
-    e.preventDefault();
-    const body = {
-      title: document.getElementById("title").value,
-      author: document.getElementById("author").value,
-      review: document.getElementById("review").value,
-      rating: parseInt(document.getElementById("rating").value)
-    };
-    const res = await fetch("/reviews", {
+    const res = await fetch("https://bookwise-1-8sk2.onrender.com/addReview", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": "Bearer " + token
-      },
-      body: JSON.stringify(body)
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ book, review })
     });
-    if (!res.ok) {
-      showToast("Failed to add review");
-      return;
-    }
-    showToast("Review added successfully");
-    setTimeout(() => location = "/reviews.html", 1500);
-  });
 
-  function showToast(msg) {
-    const t = document.getElementById("toast");
-    t.textContent = msg;
-    t.className = "show";
-    setTimeout(() => t.className = "", 2500);
-  }
+    const data = await res.json();
+    if (data.success) {
+      window.location.href = "reviews.html";
+    } else {
+      alert(data.message);
+    }
+  });
 </script>
+
 </body>
 </html>
