@@ -37,15 +37,15 @@
   document.getElementById("reviewForm").addEventListener("submit", function (event) {
     event.preventDefault();
 
-    const book = document.getElementById("book").value;
+    const title = document.getElementById("title").value;
+    const author = document.getElementById("author").value;
     const review = document.getElementById("review").value;
+    const rating = document.getElementById("rating").value;
 
-    fetch("https://bookwise-1-8sk2.onrender.com/api/addReview", {
+    fetch("https://bookwise-1-8sk2.onrender.com/addReview", { 
       method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ book: book, review: review })
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ book: `${title} by ${author}`, review, rating })
     })
       .then(response => response.json())
       .then(data => {
@@ -61,5 +61,6 @@
       });
   });
 </script>
+
 </body>
 </html>
