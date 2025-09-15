@@ -318,6 +318,17 @@
   }
 
   checkLogin();
+    <script>
+  function enforceLogin() {
+    const user = JSON.parse(localStorage.getItem("user"));
+    if (!user || !user.username) {
+      // 🚨 Kick to login if not logged in
+      window.location.href = "/login.html";
+    }
+  }
+
+  enforceLogin();
+</script>
 
 </body>
 </html>
